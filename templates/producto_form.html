@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Agregar Producto</h2>
+
+<form method="POST" action="/guardar_archivo">
+
+Nombre:
+<input type="text" name="nombre"><br>
+
+Cantidad:
+<input type="number" name="cantidad"><br>
+
+Precio:
+<input type="number" step="0.01" name="precio"><br>
+
+<button type="submit">Guardar</button>
+
+</form>
+
+{% endblock %}
