@@ -31,9 +31,7 @@ class Producto:
         self._precio = nuevo_precio
 
 
-# -------------------------
-# Clase Inventario
-# -------------------------
+
 class Inventario:
     def __init__(self):
         # Diccionario para búsqueda rápida
@@ -85,3 +83,15 @@ class Inventario:
         productos = cursor.fetchall()
         conexion.close()
         return productos
+    
+from Flask_login import UserMixin
+class Usuario(UserMixin):
+
+    def __init__(self, id, nombre, email, password):
+        self.id = id
+        self.nombre = nombre
+        self.email = email
+        self.password = password
+
+    def get_id(self):
+        return str(self.id)

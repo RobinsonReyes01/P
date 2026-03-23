@@ -1,14 +1,20 @@
-from flask import Flask, render_template, request, redirect
+from Flask import Flask, render_template, request, redirect
 from inventario.bd import Base, engine, SessionLocal
 from inventario.productos import Producto
 from inventario.inventario import guardar_txt, guardar_json, guardar_csv
 from inventario.inventario import leer_txt, leer_json, leer_csv
-
+from Flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from models import Usuario
 from Conexion.conexion import conectar
 
 app = Flask(__name__)
 
-# Crear tablas SQLite
+app.secret_key = "clave_secreta"
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "login"
+
 Base.metadata.create_all(engine)
 
 
