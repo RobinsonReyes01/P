@@ -6,6 +6,8 @@ from inventario.inventario import leer_txt, leer_json, leer_csv
 from Flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from models import Usuario
 from Conexion.conexion import conectar
+from services.producto_service import *
+from forms.producto_form import ProductoForm
 
 app = Flask(__name__)
 
@@ -24,36 +26,44 @@ def index():
 
 
 @app.route('/productos')
-def productos():
+def listar_productos():
 
-    db = SessionLocal()
-    productos = db.query(Producto).all()
-    db.close()
+    productos = obtener_productos()
+    return render_template("productos/lista.html", productos=productos)
 
-    return render_template("productos.html", productos=productos)
-
-
-@app.route('/producto/nuevo', methods=['GET','POST'])
+@app.route('/productos/nuevo', methods=['GET','POST'])
 def nuevo_producto():
 
-    if request.method == "POST":
+    if request.method == 'POST':
 
-        nombre = request.form['nombre']
-        cantidad = request.form['cantidad']
-        precio = request.form['precio']
+        form = ProductoForm(request.form)
 
-        db = SessionLocal()
+        crear_producto(form.nombre, form.precio, form.stock)
 
-        producto = Producto(nombre, cantidad, precio)
+        return redirect('/productos')
 
-        db.add(producto)
-        db.commit()
+    return render_template("productos/form.html")
 
-        db.close()
+@app.route('/productos/editar/<int:id>', methods=['GET','POST'])
+def editar_producto(id):
 
-        return redirect("/productos")
+    if request.method == 'POST':
 
-    return render_template("producto_form.html")
+        form = ProductoForm(request.form)
+
+        actualizar_producto(id, form.nombre, form.precio, form.stock)
+
+        return redirect('/productos')
+
+    producto = obtener_producto(id)
+
+    return render_template("productos/form.html", producto=producto)
+
+@app.route('/productos/eliminar/<int:id>')
+def eliminar(id):
+
+    eliminar_producto(id)
+    return redirect('/productos')
 
 
 @app.route('/guardar_archivo', methods=['POST'])
@@ -70,6 +80,29 @@ def guardar_archivo():
     guardar_csv(producto)
 
     return redirect("/datos")
+
+from reportlab.platypus import SimpleDocTemplate, Table
+
+@app.route('/reporte_pdf')
+def reporte_pdf():
+
+    productos = obtener_productos()
+
+    doc = SimpleDocTemplate("reporte_productos.pdf")
+
+    data = [["ID","Nombre","Precio","Stock"]]
+
+    for p in productos:
+        data.append([p[0], p[1], p[2], p[3]])
+
+    table = Table(data)
+
+    elements = []
+    elements.append(table)
+
+    doc.build(elements)
+
+    return "Reporte generado"
 
 
 @app.route('/datos')
