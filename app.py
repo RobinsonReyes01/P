@@ -80,7 +80,7 @@ def usuarios():
 def listar_productos():
 
     productos = obtener_productos()
-    return render_template("productos/lista.html", productos=productos)
+    return render_template("lista.html", productos=productos)
 
 @app.route('/productos/nuevo', methods=['GET','POST'])
 @login_required
@@ -94,7 +94,7 @@ def nuevo_producto():
 
         return redirect('/productos')
 
-    return render_template("productos/form.html")
+    return render_template("form.html")
 
 @app.route('/productos/editar/<int:id>', methods=['GET','POST'])
 @login_required
@@ -110,7 +110,7 @@ def editar_producto(id):
 
     producto = obtener_producto(id)
 
-    return render_template("productos/form.html", producto=producto)
+    return render_template("form.html", producto=producto)
 
 @app.route('/productos/eliminar/<int:id>')
 @login_required

@@ -48,6 +48,13 @@ def obtener_usuario_por_id(id):
 
     return usuario
 
+# VERIFICAR PASSWORD
+def verificar_password(email, password):
+    usuario = obtener_usuario_por_email(email)
+    if usuario and check_password_hash(usuario[3], password):
+        return usuario
+    return None
+
 # ACTUALIZAR USUARIO
 def actualizar_usuario(id, nombre, email, password=None):
     conexion = conectar()
