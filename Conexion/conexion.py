@@ -1,12 +1,4 @@
-import mysql.connector
+import sqlite3
 
 def conectar():
-
-    conexion = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="1234",  
-        database="tienda"
-    )
-
-    return conexion
+    return sqlite3.connect("inventario.db")

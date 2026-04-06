@@ -1,4 +1,4 @@
-from conexion.conexion import conectar
+from Conexion.conexion import conectar
 from models.producto import Producto
 
 # CREAR
@@ -7,7 +7,7 @@ def crear_producto(nombre, precio, stock):
     conexion = conectar()
     cursor = conexion.cursor()
 
-    sql = "INSERT INTO productos (nombre, precio, stock) VALUES (%s,%s,%s)"
+    sql = "INSERT INTO productos (nombre, precio, stock) VALUES (?,?,?)"
     cursor.execute(sql, (nombre, precio, stock))
 
     conexion.commit()
@@ -34,7 +34,7 @@ def obtener_producto(id):
     conexion = conectar()
     cursor = conexion.cursor()
 
-    cursor.execute("SELECT * FROM productos WHERE id_producto=%s", (id,))
+    cursor.execute("SELECT * FROM productos WHERE id=?", (id,))
     producto = cursor.fetchone()
 
     conexion.close()
@@ -48,7 +48,7 @@ def actualizar_producto(id, nombre, precio, stock):
     conexion = conectar()
     cursor = conexion.cursor()
 
-    sql = "UPDATE productos SET nombre=%s, precio=%s, stock=%s WHERE id_producto=%s"
+    sql = "UPDATE productos SET nombre=?, precio=?, stock=? WHERE id=?"
     cursor.execute(sql, (nombre, precio, stock, id))
 
     conexion.commit()
@@ -61,7 +61,7 @@ def eliminar_producto(id):
     conexion = conectar()
     cursor = conexion.cursor()
 
-    cursor.execute("DELETE FROM productos WHERE id_producto=%s", (id,))
+    cursor.execute("DELETE FROM productos WHERE id=?", (id,))
 
     conexion.commit()
     conexion.close()

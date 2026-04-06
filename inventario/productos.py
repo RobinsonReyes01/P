@@ -8,10 +8,10 @@ class Producto(Base):
 
     id = Column(Integer, primary_key=True)
     nombre = Column(String(100))
-    cantidad = Column(Integer)
+    stock = Column(Integer)
     precio = Column(Float)
 
-    def __init__(self, nombre, cantidad, precio):
+    def __init__(self, nombre, stock, precio):
         self.nombre = nombre
-        self.cantidad = cantidad
+        self.stock = stock
         self.precio = precio
